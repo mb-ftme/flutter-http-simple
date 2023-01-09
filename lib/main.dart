@@ -40,6 +40,23 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void login() {}
+
+  void register({String? password, String? userName}) async {
+    http.Response res = await http.post(
+      Uri.parse('http://localhost:4558/api/v1/auth/register'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String?, String?>{
+        'userName': userName,
+        'password': password,
+      }),
+    );
+    print(res);
+    print(jsonDecode(res.body));
+  }
+
   void senddataforregister() async {
     print("function is ok");
     http.Response res = await http.post(
@@ -79,7 +96,7 @@ class _HomePageState extends State<HomePage> {
             final email = _email.text;
             final password = _password.text;
             print(email + password);
-            senddataforregister();
+            register(password: password, userName: email);
           },
           child: const Text('Register'),
         ),
