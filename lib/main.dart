@@ -2,105 +2,96 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:secondapp/login-view.dart';
+import 'package:secondapp/register-view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
     title: 'Flutterrrrrr',
     theme: ThemeData(
-      primarySwatch: Colors.blue,
+      primarySwatch: Colors.pink,
     ),
     home: const HomePage(),
   ));
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
+  // Future<http.Response> loginReturnsFuture(
+  //     {String? password, String? userName}) async {
+  //   return http.post(
+  //     Uri.parse('http://localhost:4558/api/v1/auth/login'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode(<String?, String?>{
+  //       'userName': userName,
+  //       'password': password,
+  //     }),
+  //   );
+  // }
 
-class _HomePageState extends State<HomePage> {
-  late final TextEditingController _email;
-  late final TextEditingController _password;
+  // Future<http.Response?> loginReturnsHTTPResponse(
+  //     {String? password, String? userName}) async {
+  //   return http.post(
+  //     Uri.parse('http://localhost:4558/api/v1/auth/login'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode(<String?, String?>{
+  //       'userName': userName,
+  //       'password': password,
+  //     }),
+  //   );
+  // }
 
-  @override
-  void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
-
-    super.initState();
+  // fake future for future users like ?
+  // futurebuilder widgets
+  Future<num> waitForSeconds() {
+    return Future.delayed(Duration(seconds: 4), (() {
+      return 11111111111;
+    }));
   }
 
   @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
-  }
-
-  void login() {}
-
-  void register({String? password, String? userName}) async {
-    http.Response res = await http.post(
-      Uri.parse('http://localhost:4558/api/v1/auth/register'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String?, String?>{
-        'userName': userName,
-        'password': password,
-      }),
-    );
-    print(res);
-    print(jsonDecode(res.body));
-  }
-
-  void senddataforregister() async {
-    print("function is ok");
-    http.Response res = await http.post(
-      Uri.parse('https://jsonplaceholder.typicode.com/albums'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'title': 'aut',
-      }),
-    );
-    print(res);
-    print(jsonDecode(res.body));
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
-      body: Column(children: [
-        TextField(
-          controller: _email,
-          decoration: const InputDecoration(hintText: 'plz enter email'),
+        appBar: AppBar(
+          title: const Text('Home'),
         ),
-        TextField(
-          controller: _password,
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(hintText: 'plz enter password'),
-        ),
-        TextButton(
-          onPressed: () async {
-            final email = _email.text;
-            final password = _password.text;
-            print(email + password);
-            register(password: password, userName: email);
-          },
-          child: const Text('Register'),
-        ),
-      ]),
-    );
+        body: Column(children: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(ctx).push(
+                  MaterialPageRoute(builder: ((context) => const LoginView())));
+            },
+            child: const Text('tap to Login'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(ctx).push(MaterialPageRoute(
+                  builder: ((context) => const RegisterView())));
+            },
+            child: const Text('tap to register'),
+
+            // body: FutureBuilder(
+            //     // future: loginReturnsFuture(userName: 'fm', password: '123'),
+            //     future: waitForSeconds(),
+            //     builder: ((ctx, snapshot) {
+            //       switch (snapshot.connectionState) {
+            //         case ConnectionState.done:
+            //           print(snapshot.data!);
+            //           // Navigator.of(ctx).pop();
+            //           return const LoginView();
+            //         default:
+            //           // Navigator.of(context).push(
+            //           //     MaterialPageRoute(builder: (context) => const LoginView()));
+            //           return const Text("Loading waiting for number ");
+            //       }
+            //     })),
+          )
+        ]));
   }
 }
